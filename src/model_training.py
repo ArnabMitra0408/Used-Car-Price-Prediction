@@ -95,6 +95,7 @@ def best_model(model_data,configs):
     # Start MLflow experiment
     mlflow.set_tracking_uri('artifacts/mlruns')
     mlflow.set_experiment('Used Car Price Prediction')
+    print(f"Tracking URI: {mlflow.get_tracking_uri()}")
     for scaler_name, scaler in scalers.items():
         scaler_X = scaler
         X_train_scaled = scaler_X.fit_transform(X_train)
@@ -155,6 +156,7 @@ def best_model(model_data,configs):
                             'mae': mae
                         })
                         logging.info(f"{model_name} Trained with R2 of {r2}, mse of {mse}, mae of {mae}")
+                        
                     except Exception as e:
                         raise e
         #Log Scaler
@@ -165,7 +167,6 @@ def best_model(model_data,configs):
 
     # Find the best model based on test R2 score
     best_model_info = max(best_models, key=lambda x: x['r2'])
-    joblib.dump(best_model_info['model'], best_model_path)
     return best_model_info,best_model_path
     
 
@@ -181,7 +182,5 @@ if __name__=="__main__":
     try:
         model_data=get_data(configs,"model_training")
         best_model_info,best_model_path=best_model(model_data,configs)
-        logging.info(f"Best Model: {best_model_info['model_name']} with R2: {best_model_info['r2']}")
-        logging.info(f"Best Model Stored in Location {best_model_path}")
     except:
         logging.error("Model Training Failed",exc_info=True)

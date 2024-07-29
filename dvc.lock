@@ -289,10 +289,10 @@ stages:
       md5: 11e5904d8709a553667e1fef219f2924.dir
       size: 197492704
       nfiles: 4
-    - path: src/raw_data_extraction.py
+    - path: src/model_training.py
       hash: md5
-      md5: bfaa8735f33d8d839b5cb0d16f1fa84d
-      size: 1046
+      md5: 923484e931b14ac7523293aba6240a96
+      size: 8088
     - path: src/utils/code_files/common_utils.py
       hash: md5
       md5: 80a1d3907d332ade641f406d772ee291
@@ -307,9 +307,29 @@ stages:
       size: 597
     params:
       params.yaml:
-        model_training.best_model: src/utils/objects/best_model.joblib
+        model_training.best_model: src/utils/objects/best_model.pkl
         model_training.feature_importance: _feature_importances.png
         model_training.object_loc_prefix: src/utils/objects/
         model_training.residual_plot: _residuals_plot.png
         model_training.scaler_x: src/utils/objects/scaler_x.joblib
         model_training.scaler_y: src/utils/objects/scaler_y.joblib
+  model_saving:
+    cmd: python src/get_best_model.py --config_path=params.yaml
+    deps:
+    - path: artifacts/mlruns
+      hash: md5
+      md5: fc741e4fe37c4c25e8fe588590481a62.dir
+      size: 129746130
+      nfiles: 286
+    - path: src/get_best_model.py
+      hash: md5
+      md5: b13b5c9bd3dec7df92d9bef2ddb04497
+      size: 2509
+    - path: src/utils/code_files/common_utils.py
+      hash: md5
+      md5: 80a1d3907d332ade641f406d772ee291
+      size: 2646
+    params:
+      params.yaml:
+        model_training.artifacts_uri: artifacts/mlruns
+        model_training.best_model: src/utils/objects/best_model.pkl

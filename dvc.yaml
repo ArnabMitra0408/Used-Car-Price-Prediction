@@ -87,7 +87,7 @@ stages:
     cmd: python src/model_training.py --config_path=params.yaml
     deps:
       - src/utils/code_files/common_utils.py
-      - src/raw_data_extraction.py
+      - src/model_training.py
       - src/utils/code_files/ml_utils/plot_residuals.py
       - src/utils/code_files/ml_utils/plot_feature_importances.py
       - artifacts/raw_data
@@ -98,3 +98,12 @@ stages:
       - model_training.feature_importance
       - model_training.scaler_x
       - model_training.scaler_y
+  model_saving:
+    cmd: python src/get_best_model.py --config_path=params.yaml
+    deps:
+      - src/utils/code_files/common_utils.py
+      - src/get_best_model.py
+      - artifacts/mlruns
+    params:
+      - model_training.best_model
+      - model_training.artifacts_uri

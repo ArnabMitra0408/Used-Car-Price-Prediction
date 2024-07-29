@@ -11,10 +11,6 @@ data_dir:
   cars_details_merge: artifacts/raw_data/cars_details_merges.csv
   feature_dictionary: artifacts/raw_data/feature_dictionary.csv
   cars_data_final: artifacts/raw_data/cars_data_final.csv
-  X_train: artifacts/train_test_data/X_train.csv
-  X_test: artifacts/train_test_data/X_test.csv
-  Y_train: artifacts/train_test_data/Y_train.csv
-  Y_test: artifacts/train_test_data/Y_test.csv
 
 data_cleaning:
   null_thresh: 18907
@@ -22,12 +18,13 @@ data_cleaning:
 data_processing:
   year_filter: 2004
 model_training:
-  best_model: src/utils/objects/best_model.joblib
+  best_model: src/utils/objects/best_model.pkl
   object_loc_prefix: src/utils/objects/
   residual_plot: _residuals_plot.png
   feature_importance: _feature_importances.png
   scaler_x: src/utils/objects/scaler_x.joblib
   scaler_y: src/utils/objects/scaler_y.joblib
+  artifacts_uri: artifacts/mlruns
 
 pickle_files:
   brand_encoding: src/utils/objects/brand.pkl
