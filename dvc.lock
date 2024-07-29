@@ -1,0 +1,315 @@
+schema: '2.0'
+stages:
+  clean_data:
+    cmd: python src/data_cleaning.py --config_path=params.yaml
+    deps:
+    - path: artifacts/raw_data/
+      hash: md5
+      md5: eb7893905ab65a31f2291dd27f0c52f9.dir
+      size: 191094692
+      nfiles: 3
+    - path: src/data_cleaning.py
+      hash: md5
+      md5: 990beb57f49997c79c57afcd768ef39a
+      size: 8757
+    - path: src/utils/code_files/common_utils.py
+      hash: md5
+      md5: 80a1d3907d332ade641f406d772ee291
+      size: 2646
+    - path: src/utils/code_files/eda_utils/cols_to_lower.py
+      hash: md5
+      md5: a4625650005d7518104a1c5fe378f5e9
+      size: 289
+    - path: src/utils/code_files/eda_utils/drivetype.py
+      hash: md5
+      md5: 430059468cbed13ee09249586d6fc304
+      size: 902
+    - path: src/utils/code_files/eda_utils/drop_duplicate_cols.py
+      hash: md5
+      md5: 085eb1cc8fbad7af633a0a320c78cac8
+      size: 768
+    - path: src/utils/code_files/eda_utils/drop_duplicate_rows.py
+      hash: md5
+      md5: fef4ca2553d8b5b47aed4aacedfb101a
+      size: 234
+    - path: src/utils/code_files/eda_utils/drop_thresh_null.py
+      hash: md5
+      md5: 5aecfe47e81d9d3e3b586faf36304fe9
+      size: 389
+    - path: src/utils/code_files/eda_utils/drop_unused_col.py
+      hash: md5
+      md5: cde65b95ae19bc9058a1fa35d8c40c33
+      size: 1820
+    - path: src/utils/code_files/eda_utils/front_rear_brake.py
+      hash: md5
+      md5: 9758bfe1068cf7681cee9af418b78334
+      size: 2475
+    - path: src/utils/code_files/eda_utils/fuelsupply.py
+      hash: md5
+      md5: caacdbd7a77ab35402762fe5afc653fd
+      size: 2966
+    - path: src/utils/code_files/eda_utils/gearbox.py
+      hash: md5
+      md5: 679531867cbee6706bee645fb8438aea
+      size: 6664
+    - path: src/utils/code_files/eda_utils/numerical_feature.py
+      hash: md5
+      md5: e3db29f7edb43c356fa22817906b6257
+      size: 335
+    - path: src/utils/code_files/eda_utils/rearange_cols.py
+      hash: md5
+      md5: 13fa0a0f8d63013e1098feb8bd8c8622
+      size: 255
+    - path: src/utils/code_files/eda_utils/rename_cols.py
+      hash: md5
+      md5: 02a9914d574d433e6986247ac64c3376
+      size: 254
+    - path: src/utils/code_files/eda_utils/steeringtype.py
+      hash: md5
+      md5: 8f8827053d52cb1dd14553df98692b0b
+      size: 1061
+    - path: src/utils/code_files/eda_utils/torque_and_power.py
+      hash: md5
+      md5: e6e009a6e3640519e1deafe6ffc96e61
+      size: 1213
+    - path: src/utils/code_files/eda_utils/turbo_and_supercharger.py
+      hash: md5
+      md5: 5f6d9f83e3f250583149fe33ba39c0af
+      size: 529
+    - path: src/utils/code_files/eda_utils/turbocharger.py
+      hash: md5
+      md5: ec72d159d8ef77d3b279e543390b1a7a
+      size: 903
+    - path: src/utils/code_files/eda_utils/tyretype.py
+      hash: md5
+      md5: 967ee723982b350cf884bea4964e7bf7
+      size: 1468
+    - path: src/utils/code_files/eda_utils/valve_config.py
+      hash: md5
+      md5: 8fd8f7edeec29d7f7bc3821d43adf9b9
+      size: 1110
+    params:
+      params.yaml:
+        data_cleaning.null_thresh: 18907
+        data_dir.cars_data_clean: artifacts/raw_data/cars_data_clean.csv
+        data_dir.cars_details_merge: artifacts/raw_data/cars_details_merges.csv
+  push_to_remote:
+    cmd: dvc push
+    deps:
+    - path: artifacts
+      hash: md5
+      md5: 8f63ea43de1f95b98c2a8a3c049735d6.dir
+      size: 282600588
+      nfiles: 42
+  preprocessing:
+    cmd: python src/data_processing.py --config_path=params.yaml
+    deps:
+    - path: artifacts/raw_data/
+      hash: md5
+      md5: 6dc2b470da594491a7b28e49305ccbc2.dir
+      size: 191654221
+      nfiles: 3
+    - path: artifacts/train_test_data/
+      hash: md5
+      md5: 0b248416c643526f9553ad9aeabfe0d5.dir
+      size: 62549108
+      nfiles: 5
+    - path: src/data_processing.py
+      hash: md5
+      md5: 796327e88d0d63e3e4edc23653b69def
+      size: 14554
+    - path: src/utils/common_utils.py
+      hash: md5
+      md5: 8a8e6ad30c663f19cec8dd838963a33a
+      size: 1211
+    params:
+      params.yaml:
+        data_dir.X_test: artifacts/train_test_data/X_test.csv
+        data_dir.X_train: artifacts/train_test_data/X_train.csv
+        data_dir.Y_test: artifacts/train_test_data/Y_test.csv
+        data_dir.Y_train: artifacts/train_test_data/Y_train.csv
+        data_dir.cars_data_clean: artifacts/raw_data/cars_data_clean.csv
+        pickle_files.body_type_encoding: src/utils/body_type.pkl
+        pickle_files.brand_encoding: src/utils/brand.pkl
+        pickle_files.fuel_supply_encoding: src/utils/Fuel_Supply_System.pkl
+        pickle_files.fuel_type_encoding: src/utils/Fuel_Type.pkl
+        pickle_files.model_encoding: src/utils/mdoels.pkl
+  process_data:
+    cmd: python src/data_processing.py --config_path=params.yaml
+    deps:
+    - path: artifacts/raw_data/
+      hash: md5
+      md5: 11e5904d8709a553667e1fef219f2924.dir
+      size: 197492704
+      nfiles: 4
+    - path: src/data_processing.py
+      hash: md5
+      md5: ebbc43632cf1d574fa2ad4309c24640b
+      size: 9413
+    - path: src/utils/code_files/common_utils.py
+      hash: md5
+      md5: 80a1d3907d332ade641f406d772ee291
+      size: 2646
+    - path: src/utils/code_files/processing_utils/acceleration.py
+      hash: md5
+      md5: bd89fd936dde67998638868b18fe473c
+      size: 629
+    - path: src/utils/code_files/processing_utils/alloy_wheel_size.py
+      hash: md5
+      md5: 0bb612689bbbc2113d2d1a7ff5b9c4b1
+      size: 774
+    - path: src/utils/code_files/processing_utils/body_type.py
+      hash: md5
+      md5: 0cac85b8b5c28d7bda20946ddf8a20f7
+      size: 513
+    - path: src/utils/code_files/processing_utils/brake_type.py
+      hash: md5
+      md5: 18def005b293d0f10b4add7453fffba7
+      size: 1246
+    - path: src/utils/code_files/processing_utils/brand.py
+      hash: md5
+      md5: e4b3ec2a7bc3306f18a6c47c62debce3
+      size: 424
+    - path: src/utils/code_files/processing_utils/car_seller_type.py
+      hash: md5
+      md5: 6f2a2401b94724f99f7beac128c8a3b1
+      size: 397
+    - path: src/utils/code_files/processing_utils/drive_type.py
+      hash: md5
+      md5: 86fcd592d075da7c63d10441d1599eae
+      size: 946
+    - path: src/utils/code_files/processing_utils/front_tread.py
+      hash: md5
+      md5: 242ec45969b468b86e4c5924ec57b58f
+      size: 644
+    - path: src/utils/code_files/processing_utils/fuel_type.py
+      hash: md5
+      md5: 632de6577ffff7820d3368ff459145b3
+      size: 418
+    - path: src/utils/code_files/processing_utils/gear_type.py
+      hash: md5
+      md5: 60a545414faf2790593768efbdb92b07
+      size: 933
+    - path: src/utils/code_files/processing_utils/length.py
+      hash: md5
+      md5: 1fd81a12ac9620dc9d7f84727126288b
+      size: 604
+    - path: src/utils/code_files/processing_utils/max_power_at.py
+      hash: md5
+      md5: 1262ba615f44f0415f9664c9cddb810b
+      size: 630
+    - path: src/utils/code_files/processing_utils/max_power_delivered.py
+      hash: md5
+      md5: 116e70218209ed1979ffafc225ceba56
+      size: 686
+    - path: src/utils/code_files/processing_utils/mileage.py
+      hash: md5
+      md5: f66f0c64347af29d76ebe37a605a3cb9
+      size: 616
+    - path: src/utils/code_files/processing_utils/model.py
+      hash: md5
+      md5: 30122022e740168ca31722b863d453f8
+      size: 414
+    - path: src/utils/code_files/processing_utils/num_cylinder.py
+      hash: md5
+      md5: c3bb019f049d7dc54516877bb50f4f3d
+      size: 614
+    - path: src/utils/code_files/processing_utils/owner_type.py
+      hash: md5
+      md5: a101187cfa6a94e19f2d91267ea5b555
+      size: 497
+    - path: src/utils/code_files/processing_utils/state.py
+      hash: md5
+      md5: 85ae6df53ac0b33d3bb99949cada9da6
+      size: 412
+    - path: src/utils/code_files/processing_utils/steering_type.py
+      hash: md5
+      md5: ef9c05c23036e2a61b339ebe408455b3
+      size: 918
+    - path: src/utils/code_files/processing_utils/transmission_type.py
+      hash: md5
+      md5: 6535239cdd2f61918e61be52a1f57bb1
+      size: 472
+    - path: src/utils/code_files/processing_utils/tyre_type.py
+      hash: md5
+      md5: b8ce1c8908ec1b78e227c56ccbca0828
+      size: 499
+    - path: src/utils/code_files/processing_utils/wheel_base.py
+      hash: md5
+      md5: de42fa283a7ff26c303584c2d49aeb68
+      size: 620
+    params:
+      params.yaml:
+        data_dir.cars_data_clean: artifacts/raw_data/cars_data_clean.csv
+        data_dir.cars_data_final: artifacts/raw_data/cars_data_final.csv
+        data_processing.year_filter: 2004
+        pickle_files.body_type_encoding: src/utils/objects/Body_Type.pkl
+        pickle_files.brake_type_encoding: src/utils/objects/Brake_Type.pkl
+        pickle_files.brand_encoding: src/utils/objects/brand.pkl
+        pickle_files.drive_type_encoding: src/utils/objects/Drive_Type.pkl
+        pickle_files.fuel_type_encoding: src/utils/objects/Fuel_Type.pkl
+        pickle_files.gear_box_encoding: src/utils/objects/Gear_Type.pkl
+        pickle_files.model_encoding: src/utils/objects/model.pkl
+        pickle_files.owner_type_encoding: src/utils/objects/owner_type.pkl
+        pickle_files.seller_type_encoding: src/utils/objects/Car_Seller_Type.pkl
+        pickle_files.state_encoding: src/utils/objects/state.pkl
+        pickle_files.steering_type_encoding: src/utils/objects/Steering_Type.pkl
+        pickle_files.transmission_type_encoding: src/utils/objects/Transmission_Type.pkl
+        pickle_files.tyre_type_encoding: src/utils/objects/Tyre_Type.pkl
+  raw_data_extraction:
+    cmd: python src/raw_data_extraction.py --config_path=params.yaml
+    deps:
+    - path: artifacts/raw_data
+      hash: md5
+      md5: c911796aff9f43ac0b3a1fd5358d19ab.dir
+      size: 199397564
+      nfiles: 3
+    - path: artifacts/raw_zip_data
+      hash: md5
+      md5: c9ec8ad8e34677e0272ed8177b0412f9.dir
+      size: 19706549
+      nfiles: 1
+    - path: src/raw_data_extraction.py
+      hash: md5
+      md5: bfaa8735f33d8d839b5cb0d16f1fa84d
+      size: 1046
+    - path: src/utils/code_files/common_utils.py
+      hash: md5
+      md5: 80a1d3907d332ade641f406d772ee291
+      size: 2646
+    params:
+      params.yaml:
+        data_dir.raw_csv_data_dir: artifacts/raw_data
+        data_dir.raw_zip_data: artifacts/raw_zip_data/Dataset.zip
+  model_training:
+    cmd: python src/model_training.py --config_path=params.yaml
+    deps:
+    - path: artifacts/raw_data
+      hash: md5
+      md5: 11e5904d8709a553667e1fef219f2924.dir
+      size: 197492704
+      nfiles: 4
+    - path: src/raw_data_extraction.py
+      hash: md5
+      md5: bfaa8735f33d8d839b5cb0d16f1fa84d
+      size: 1046
+    - path: src/utils/code_files/common_utils.py
+      hash: md5
+      md5: 80a1d3907d332ade641f406d772ee291
+      size: 2646
+    - path: src/utils/code_files/ml_utils/plot_feature_importances.py
+      hash: md5
+      md5: ce9389921854cb5cba2cd4a483dbcdac
+      size: 570
+    - path: src/utils/code_files/ml_utils/plot_residuals.py
+      hash: md5
+      md5: 6afac589dce9945256f6c659bb25ab8a
+      size: 597
+    params:
+      params.yaml:
+        model_training.best_model: src/utils/objects/best_model.joblib
+        model_training.feature_importance: _feature_importances.png
+        model_training.object_loc_prefix: src/utils/objects/
+        model_training.residual_plot: _residuals_plot.png
+        model_training.scaler_x: src/utils/objects/scaler_x.joblib
+        model_training.scaler_y: src/utils/objects/scaler_y.joblib

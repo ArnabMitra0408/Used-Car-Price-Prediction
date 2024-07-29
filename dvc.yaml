@@ -1,0 +1,100 @@
+stages:
+  raw_data_extraction:
+    cmd: python src/raw_data_extraction.py --config_path=params.yaml
+    deps:
+      - src/utils/code_files/common_utils.py
+      - src/raw_data_extraction.py
+      - artifacts/raw_zip_data
+      - artifacts/raw_data
+    params:
+      - data_dir.raw_zip_data
+      - data_dir.raw_csv_data_dir
+  clean_data:
+    cmd: python src/data_cleaning.py --config_path=params.yaml
+    deps:
+      - src/utils/code_files/common_utils.py
+      - src/data_cleaning.py
+      - src/utils/code_files/eda_utils/cols_to_lower.py
+      - src/utils/code_files/eda_utils/drivetype.py
+      - src/utils/code_files/eda_utils/drop_duplicate_cols.py
+      - src/utils/code_files/eda_utils/drop_duplicate_rows.py
+      - src/utils/code_files/eda_utils/drop_thresh_null.py
+      - src/utils/code_files/eda_utils/drop_unused_col.py
+      - src/utils/code_files/eda_utils/front_rear_brake.py
+      - src/utils/code_files/eda_utils/fuelsupply.py
+      - src/utils/code_files/eda_utils/gearbox.py
+      - src/utils/code_files/eda_utils/numerical_feature.py
+      - src/utils/code_files/eda_utils/rearange_cols.py
+      - src/utils/code_files/eda_utils/rename_cols.py
+      - src/utils/code_files/eda_utils/steeringtype.py
+      - src/utils/code_files/eda_utils/torque_and_power.py
+      - src/utils/code_files/eda_utils/turbo_and_supercharger.py
+      - src/utils/code_files/eda_utils/turbocharger.py
+      - src/utils/code_files/eda_utils/tyretype.py
+      - src/utils/code_files/eda_utils/valve_config.py
+      - artifacts/raw_data/
+    params:
+      - data_dir.cars_details_merge
+      - data_dir.cars_data_clean
+      - data_cleaning.null_thresh
+  process_data:
+    cmd: python src/data_processing.py --config_path=params.yaml
+    deps:
+      - src/utils/code_files/common_utils.py
+      - src/data_processing.py
+      - artifacts/raw_data/
+      - src/utils/code_files/processing_utils/acceleration.py
+      - src/utils/code_files/processing_utils/alloy_wheel_size.py
+      - src/utils/code_files/processing_utils/body_type.py
+      - src/utils/code_files/processing_utils/brake_type.py
+      - src/utils/code_files/processing_utils/brand.py
+      - src/utils/code_files/processing_utils/car_seller_type.py
+      - src/utils/code_files/processing_utils/drive_type.py
+      - src/utils/code_files/processing_utils/front_tread.py
+      - src/utils/code_files/processing_utils/fuel_type.py
+      - src/utils/code_files/processing_utils/gear_type.py
+      - src/utils/code_files/processing_utils/length.py
+      - src/utils/code_files/processing_utils/max_power_at.py
+      - src/utils/code_files/processing_utils/max_power_delivered.py
+      - src/utils/code_files/processing_utils/mileage.py
+      - src/utils/code_files/processing_utils/model.py
+      - src/utils/code_files/processing_utils/num_cylinder.py
+      - src/utils/code_files/processing_utils/owner_type.py
+      - src/utils/code_files/processing_utils/state.py
+      - src/utils/code_files/processing_utils/steering_type.py
+      - src/utils/code_files/processing_utils/transmission_type.py
+      - src/utils/code_files/processing_utils/tyre_type.py
+      - src/utils/code_files/processing_utils/wheel_base.py
+    params:
+      - pickle_files.brand_encoding
+      - pickle_files.model_encoding
+      - pickle_files.state_encoding
+      - pickle_files.owner_type_encoding
+      - pickle_files.body_type_encoding
+      - pickle_files.transmission_type_encoding
+      - pickle_files.fuel_type_encoding
+      - pickle_files.seller_type_encoding
+      - pickle_files.seller_type_encoding
+      - pickle_files.tyre_type_encoding
+      - pickle_files.steering_type_encoding
+      - pickle_files.gear_box_encoding
+      - pickle_files.drive_type_encoding
+      - pickle_files.brake_type_encoding
+      - data_processing.year_filter
+      - data_dir.cars_data_clean
+      - data_dir.cars_data_final
+  model_training:
+    cmd: python src/model_training.py --config_path=params.yaml
+    deps:
+      - src/utils/code_files/common_utils.py
+      - src/raw_data_extraction.py
+      - src/utils/code_files/ml_utils/plot_residuals.py
+      - src/utils/code_files/ml_utils/plot_feature_importances.py
+      - artifacts/raw_data
+    params:
+      - model_training.best_model
+      - model_training.object_loc_prefix
+      - model_training.residual_plot
+      - model_training.feature_importance
+      - model_training.scaler_x
+      - model_training.scaler_y
