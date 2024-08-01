@@ -1,6 +1,5 @@
 import joblib
 from src.utils.code_files.common_utils import read_params
-from src.utils.code_files import common_utils
 from flask import Flask, request, render_template
 
 app = Flask(__name__)
