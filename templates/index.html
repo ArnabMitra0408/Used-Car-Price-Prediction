@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Used Car Price Predictor</title>
+</head>
+<body>
+    <div>
+        <center>
+            <h1 ><b>USED CAR PRICE PREDICTOR</b></h1>
+        </center>
+    </div>
+    <form action="{{ url_for('predict')}}"method="post">
+        <b>Enter Brand Name</b>
+        <div>
+            <input type="text" name='Brand_Name'placeholder='Enter The Brand'>
+            <br></br>
+        </div>
+        <b>Enter Model Name</b>
+        <div>
+            <input type="text"name='Model_Name' placeholder="Enter The Model">
+            <br></br>
+        </div>
+        <b>Enter Manufactured Year</b>
+        <div>
+            <input type="number"name='Manufactured_Year' placeholder="Enter The Manufactured Year">
+            <br></br>
+        </div>
+        <b>Enter Front Tread</b>
+        <div>
+            <input type="number"name='Front_Tread' placeholder="Enter Front Tread">
+            <br></br>
+        </div>
+        <b>Enter Max Power At</b>
+        <div>
+            <input type="number"name='Max_Power_At' placeholder="Enter Max Power At">
+            <br></br>
+        </div>
+        <b>Enter Max Power Delivered</b>
+        <div>
+            <input type="number"name='Max_Power_Delivered' placeholder="Enter Max Power Delivered">
+            <br></br>
+        </div>
+        <b>Enter Acceleration</b>
+        <div>
+            <input type="number"name='Acceleration' placeholder="Enter Acceleration">
+            <br></br>
+        </div>
+        <b>Enter length</b>
+        <div>
+            <input type="number"name='length' placeholder="Enter length">
+            <br></br>
+        </div>
+        <b>Enter Displacement</b>
+        <div>
+            <input type="number"name='Displacement' placeholder="Enter Displacement">
+            <br></br>
+        </div>
+        <b>Enter KM Driven</b>
+        <div>
+            <input type="number"name='KM_Driven' placeholder="Enter KM Driven">
+            <br></br>
+        </div>
+        <b>Enter Num Cylinder</b>
+        <div>
+            <input type="number"name='Num_Cylinder' placeholder="Enter Num Cylinder">
+            <br></br>
+        </div>
+        <b>Enter Seating Capacity</b>
+        <div>
+            <input type="number"name='Seating_Capacity' placeholder="Enter Seating Capacity">
+            <br></br>
+        </div>
+        <b>Enter Num Doors</b>
+        <div>
+            <input type="number"name='Num_Doors' placeholder="Enter Num Doors">
+            <br></br>
+        </div>
+        <b>Enter Alloy Wheel Size</b>
+        <div>
+            <input type="number"name='Alloy_Wheel_Size' placeholder="Enter Alloy Wheel Size">
+            <br></br>
+        </div>
+        <b>Enter Valves Per Cylinder</b>
+        <div>
+            <input type="number"name='Valves_Per_Cylinder' placeholder="Enter Valves Per Cylinder">
+            <br></br>
+        </div>
+        <b>Enter mileage</b>
+        <div>
+            <input type="number"name='mileage' placeholder="Enter mileage">
+            <br></br>
+        </div>
+        <b>Enter tyre type</b>
+        <div>
+            <input type="text"name='tyre_type' placeholder="Enter Tyre Type">
+            <br></br>
+        </div>
+        <b>Enter Transmission Type</b>
+        <div>
+            <input type="text"name='Transmission_Type' placeholder="Enter Transmission Type">
+            <br></br>
+        </div>
+        <b>Enter Fuel Type</b>
+        <div>
+            <input type="text"name='fuel_type' placeholder="Enter Fuel Type">
+            <br></br>
+        </div>
+        <b>Enter Body Type</b>
+        <div>
+            <input type="text"name='body_type' placeholder="Enter Body Type">
+            <br></br>
+        </div>
+        <b>Enter Front Brake Type</b>
+        <div>
+            <input type="text"name='front_brake_type' placeholder="Enter front brake type">
+            <br></br>
+        </div>
+        <b>Enter Rear Brake Type</b>
+        <div>
+            <input type="text"name='rear_brake_type' placeholder="Enter rear brake type">
+            <br></br>
+        </div>
+        <b>Enter Steering Type</b>
+        <div>
+            <input type="text"name='steering_type' placeholder="Enter Steering Type">
+            <br></br>
+        </div>
+        <b>Enter Drive Type</b>
+        <div>
+            <input type="text"name='drive_type' placeholder="Enter Drive Type">
+            <br></br>
+        </div>
+        <b>Enter Gear Type</b>
+        <div>
+            <input type="text"name='gear_type' placeholder="Enter Gear Type">
+            <br></br>
+        </div>
+        <b>Enter Car Seller Type</b>
+        <div>
+            <input type="text"name='Car_Seller_Type' placeholder="Enter Car Seller Type">
+            <br></br>
+        </div>
+        <b>Enter Owner Type</b>
+        <div>
+            <input type="text"name='owner_type' placeholder="Enter Owner Type">
+            <br></br>
+        </div>
+        <b>Enter State</b>
+        <div>
+            <input type="text"name='state' placeholder="Enter State">
+            <br></br>
+        </div>
+        <b>Enter Wheel Base</b>
+        <div>
+            <input type="number"name='Wheel_Base' placeholder="Enter Wheel Base">
+            <br></br>
+        </div>
+        <b>Enter Turbo Charger (1,0)</b>
+        <div>
+            <input type="number"name='Turbo_Charger' placeholder="Enter Turbo Charger (1,0)">
+            <br></br>
+        </div>
+        <b>Enter Super Charger (1,0)</b>
+        <div>
+            <input type="number"name='Super_Charger' placeholder="Enter Super Charger (1,0)">
+            <br></br>
+        </div>
+        <b>Enter Insurance Premium (1,0)</b>
+        <div>
+            <input type="number"name='Insurance_Premium' placeholder="Enter Insurance Premium (1,0)">
+            <br></br>
+        </div>
+     
+        <div>
+            <input type="submit">
+            </div>
+    </form>
+
+    {% if car_price %} 
+		<h2> Your Car Price is: {{car_price}} years</h2>
+	{% endif %}
+</body>
+</html>
