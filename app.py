@@ -1,23 +1,7 @@
 import joblib
-import pickle
-import os
-import pandas as pd
-from argparse import ArgumentParser
-from src.utils.code_files.common_utils import read_params,get_data
-import numpy as np
-import mlflow
-from sklearn.model_selection import train_test_split, GridSearchCV, KFold
-from sklearn.preprocessing import MinMaxScaler, RobustScaler,StandardScaler
-from sklearn.linear_model import LinearRegression, Lasso, Ridge
-from sklearn.ensemble import GradientBoostingRegressor, AdaBoostRegressor, RandomForestRegressor
-from xgboost import XGBRegressor
-from catboost import CatBoostRegressor
+from src.utils.code_files.common_utils import read_params
 from src.utils.code_files import common_utils
 from flask import Flask, request, render_template
-import sklearn
-import joblib
-import pickle
-import numpy as np
 
 app = Flask(__name__)
 configs=read_params('params.yaml')
