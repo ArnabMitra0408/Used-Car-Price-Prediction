@@ -3,7 +3,9 @@ from src.utils.code_files.common_utils import read_params
 from flask import Flask, request, render_template
 
 app = Flask(__name__)
+print("starting acquiring params")
 configs=read_params('params.yaml')
+print("params acquired")
 def file_load(path:str,type:str='pkl'):
     file=joblib.load(path)
     return file
