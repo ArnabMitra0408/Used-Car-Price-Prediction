@@ -46,7 +46,7 @@ To set up the project locally, follow these steps:
 
 * Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/ArnabMitra0408/Used-Car-Price-Prediction.git
 
 * Install the required packages:
   ```bash
