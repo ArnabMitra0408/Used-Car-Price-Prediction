@@ -1,6 +1,7 @@
 import joblib
 from src.utils.code_files.common_utils import read_params
 from flask import Flask, request, render_template
+import numpy as np
 
 app = Flask(__name__)
 print("starting acquiring params")

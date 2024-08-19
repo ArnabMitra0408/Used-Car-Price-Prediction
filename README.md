@@ -48,6 +48,10 @@ To set up the project locally, follow these steps:
    ```bash
    git clone https://github.com/ArnabMitra0408/Used-Car-Price-Prediction.git
 
+* Go to the cloned directory:
+    ```bash
+   cd Used-Car-Price-Prediction
+
 * Install the required packages:
   ```bash
    pip install -r requirements.txt

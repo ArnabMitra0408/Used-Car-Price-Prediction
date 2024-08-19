@@ -5,7 +5,7 @@ import pandas as pd
 import yaml
 import zipfile
 import logging
-
+import sqlite3
 
 logging.basicConfig(
     format="{asctime} - {levelname} - {message}",
