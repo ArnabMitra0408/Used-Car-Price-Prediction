@@ -2,8 +2,8 @@ version:  "3.7"
 
 services:
   mlapp:
-    container_name: mlapp
-    image: arnab0408/mlapp
+    container_name: used_car_price_predictor
+    image: arnab0408/used_car_price_predictor
     ports:
       - "5000:5000"
     build:
