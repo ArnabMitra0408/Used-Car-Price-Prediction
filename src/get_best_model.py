@@ -3,10 +3,15 @@ from mlflow.tracking import MlflowClient
 import mlflow.pyfunc
 from argparse import ArgumentParser
 import pickle
-import logging
 from utils.code_files import common_utils
 from utils.code_files.common_utils import read_params
-logger = logging.getLogger(__name__)
+from utils.code_files.common_utils import sql_connect,Custom_Handler
+import logging
+db = sql_connect()
+custom_handler = Custom_Handler(db)
+logger = logging.getLogger('Pipeline')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(custom_handler)
 
 
 def save_best_model(configs):
@@ -36,7 +41,7 @@ def save_best_model(configs):
                 model_name='Adaboost'
             else: 
                 model_name='Ridge'
-            logging.info(f'Best Model is {model_name} with a Test R2 score of {runs['metrics.test_r2'].max()}')
+            logger.info(f'Best Model is {model_name} with a Test R2 score of {runs['metrics.test_r2'].max()}')
             model_uri = f"{artifacts_uri}/{experiment.experiment_id}/{run_id}/artifacts/{model_name}/model.pkl"
             
             with open(model_uri, 'rb') as file:
@@ -45,7 +50,7 @@ def save_best_model(configs):
             with open(best_model_path, 'wb') as file:
                 pickle.dump(best_model, file)
             break
-    logging.info(f"Model Saved in Location {best_model_path}")
+    logger.info(f"Model Saved in Location {best_model_path}")
 
 if __name__=="__main__":
     args=ArgumentParser()
@@ -55,8 +60,10 @@ if __name__=="__main__":
     configs=read_params(config_path)
     
 
-    logging.info("Beginning Saving Best Model")
+    logger.info("Beginning Saving Best Model")
     try:
         save_best_model(configs)
     except:
-        logging.error("Model Saving Failed",exc_info=True)
+        logger.error("Model Saving Failed",exc_info=True)
+
+    db.close_connection()

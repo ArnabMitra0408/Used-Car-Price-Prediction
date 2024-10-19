@@ -6,7 +6,7 @@ from utils.code_files import common_utils
 from argparse import ArgumentParser
 from sklearn.preprocessing import OrdinalEncoder
 import pickle
-import logging
+
 from utils.code_files.processing_utils.front_tread import front_tread
 from utils.code_files.processing_utils.wheel_base import wheel_base
 from utils.code_files.processing_utils.brake_type import brake_type
@@ -29,7 +29,13 @@ from utils.code_files.processing_utils.owner_type import owner_type
 from utils.code_files.processing_utils.state import state
 from utils.code_files.processing_utils.brand import brand
 from utils.code_files.processing_utils.max_power_delivered import max_power_delivered
-logger = logging.getLogger(__name__)
+from utils.code_files.common_utils import sql_connect,Custom_Handler
+import logging
+db = sql_connect()
+custom_handler = Custom_Handler(db)
+logger = logging.getLogger('Pipeline')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(custom_handler)
 
 
 
@@ -58,49 +64,49 @@ def processing(configs,clean_data):
 
     try:
         clean_data=front_tread(clean_data)
-        logging.info("Front Tread Column Processed")
+        logger.info("Front Tread Column Processed")
     except Exception as e:
         raise e
     
     try:
         clean_data=max_power_at(clean_data)
-        logging.info("Max Power At Column Processed")
+        logger.info("Max Power At Column Processed")
     except Exception as e:
         raise e
 
     try:
         clean_data=max_power_delivered(clean_data)
-        logging.info("Max Power Delivered Column Processed")
+        logger.info("Max Power Delivered Column Processed")
     except Exception as e:
         raise e
     
     try:
         clean_data=acceleration(clean_data)
-        logging.info("Acceleration Column Processed")
+        logger.info("Acceleration Column Processed")
     except Exception as e:
         raise e
 
     try:
         clean_data=length(clean_data)
-        logging.info("length Column Processed")
+        logger.info("length Column Processed")
     except Exception as e:
         raise e
 
     try:
         clean_data.dropna(subset=['Displacement'],inplace=True)
-        logging.info("Displacement Column Processed")
+        logger.info("Displacement Column Processed")
     except Exception as e:
         raise e
 
     try:
         clean_data['KM_Driven']=clean_data['KM_Driven'].apply(np.log)
-        logging.info("KM_Driven Column Processed")
+        logger.info("KM_Driven Column Processed")
     except Exception as e:
         raise e
 
     try:
         clean_data=num_cylinder(clean_data)
-        logging.info("No of Cylinder Column Processed")
+        logger.info("No of Cylinder Column Processed")
     except Exception as e:
         raise e
     
@@ -108,7 +114,7 @@ def processing(configs,clean_data):
         clean_data=clean_data.reset_index(drop=True)
         clean_data=clean_data[clean_data['Seating Capacity']!=0]
         clean_data.dropna(subset='Seating Capacity',inplace=True)
-        logging.info("Seating Capacity Column Processed")
+        logger.info("Seating Capacity Column Processed")
     except Exception as e:
         raise e
 
@@ -116,111 +122,111 @@ def processing(configs,clean_data):
     try:
         clean_data=clean_data.reset_index(drop=True)
         clean_data.dropna(subset='Num_Doors',inplace=True)
-        logging.info("Num Doors column Processed")
+        logger.info("Num Doors column Processed")
     except Exception as e:
         raise e
 
     try:
         clean_data=alloy_wheel_size(clean_data)
-        logging.info("Alloy Wheel Size Column Processed")
+        logger.info("Alloy Wheel Size Column Processed")
     except Exception as e:
         raise e
 
     try:
         clean_data.dropna(subset='Valves_Per_Cylinder',inplace=True)
-        logging.info("Valves_Per_Cylinder Column Processed")
+        logger.info("Valves_Per_Cylinder Column Processed")
     except Exception as e:
         raise e
     
     try:
         clean_data=mileage(clean_data)
-        logging.info("mileage Column Processed")
+        logger.info("mileage Column Processed")
     except Exception as e:
         raise e
 
 
     try:
         clean_data=tyre_type(clean_data,tyre_types_config_path)
-        logging.info("Tyre Type Processed")
+        logger.info("Tyre Type Processed")
     except Exception as e:
         raise e
      
     try:
         clean_data=transmission_type(clean_data,transmission_type_config_path)
-        logging.info("Transmission Type Processed")
+        logger.info("Transmission Type Processed")
     except Exception as e:
         raise e 
     
     try: 
         clean_data=fuel_type(clean_data,fuel_type_config_path)
-        logging.info("Fuel Type Processed")
+        logger.info("Fuel Type Processed")
     except Exception as e:
         raise e
     
     try:
         clean_data=body_type(clean_data,body_type_config_path)
-        logging.info("Body Type Processed")
+        logger.info("Body Type Processed")
     except Exception as e:
         raise e
     
     try:
         clean_data=brake_type(clean_data,brake_type_config_path)
-        logging.info("Brake Type Processed")
+        logger.info("Brake Type Processed")
     except Exception as e:
         raise e
 
     try:
         clean_data=steering_type(clean_data,steering_type_config_path)
-        logging.info("Steering Type Processed")
+        logger.info("Steering Type Processed")
     except Exception as e:
         raise e
     
     try:
         clean_data=drive_type(clean_data,drive_type_config_path)
-        logging.info("Drive Type Processed")
+        logger.info("Drive Type Processed")
     except Exception as e:
         raise e
 
     try:
         clean_data=gear_type(clean_data,gear_box_config_path)
-        logging.info("Gear Type Processed")
+        logger.info("Gear Type Processed")
     except Exception as e:
         raise e
     
     try:
         clean_data=car_seller_type(clean_data,seller_type_config_path)
-        logging.info("Car Seller Type Processed")
+        logger.info("Car Seller Type Processed")
     except Exception as e:
         raise e
 
     try:
         clean_data=owner_type(clean_data,owner_type_config_path)
-        logging.info("Owner Type Processed")
+        logger.info("Owner Type Processed")
     except Exception as e:
         raise e
     
     try:
         clean_data=state(clean_data,state_config_path)
-        logging.info("State Processed")
+        logger.info("State Processed")
     except Exception as e:
         raise e
     
     try:
         clean_data=model(clean_data,model_config_path)
-        logging.info("Model Processed")
+        logger.info("Model Processed")
     except Exception as e:
         raise e
     
 
     try:
         clean_data=brand(clean_data,brand_config_path)
-        logging.info("Brand Processed")
+        logger.info("Brand Processed")
     except Exception as e:
         raise e
     
     try:
         clean_data=wheel_base(clean_data)
-        logging.info("Wheel Base Processed")
+        logger.info("Wheel Base Processed")
     except Exception as e:
         raise e
     
@@ -258,4 +264,4 @@ if __name__=='__main__':
     except Exception as e:
         logger.error("Could Not Finish Data Processing",exc_info=True)
 
-
+    db.close_connection()

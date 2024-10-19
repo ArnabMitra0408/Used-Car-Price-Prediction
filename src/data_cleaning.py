@@ -1,7 +1,7 @@
 #Importing Libraries
 import pandas as pd
-from argparse import ArgumentParser
 import logging
+from argparse import ArgumentParser
 from utils.code_files import common_utils
 from utils.code_files.common_utils import read_params,save_df,get_begin_float,get_begin_number
 from utils.code_files.eda_utils.drop_thresh_null import drop_thresh_null
@@ -22,7 +22,12 @@ from utils.code_files.eda_utils.numerical_feature import numerical_feature
 from utils.code_files.eda_utils.torque_and_power import torque_and_power
 from utils.code_files.eda_utils.turbo_and_supercharger import turbo_and_supercharger
 from utils.code_files.eda_utils.turbocharger import turbocharger
-logger = logging.getLogger(__name__)
+from utils.code_files.common_utils import sql_connect,Custom_Handler
+db = sql_connect()
+custom_handler = Custom_Handler(db)
+logger = logging.getLogger('Pipeline')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(custom_handler)
 
 def clean_data(configs):
 
@@ -34,19 +39,19 @@ def clean_data(configs):
    #All the functions to clean the data
    try:
       cars_details_merge=drop_thresh_null(cars_details_merge,null_thresh)
-      logging.info(f"Successfully Dropped Columns which have more than {null_thresh} Null values")
+      logger.info(f"Successfully Dropped Columns which have more than {null_thresh} Null values")
    except Exception as e:
       raise e
 
    try:
       cars_details_merge=drop_unused_col(cars_details_merge)
-      logging.info("Successfully Dropped Unused Columns")
+      logger.info("Successfully Dropped Unused Columns")
    except Exception as e:
         raise e
     
    try: 
       cars_details_merge,columns_to_rename=drop_duplicate_col(cars_details_merge)
-      logging.info("Successfully Deleted Duplicated Columns and Stored the Columns to Rename")
+      logger.info("Successfully Deleted Duplicated Columns and Stored the Columns to Rename")
    except Exception as e:
       raise e
 
@@ -60,7 +65,7 @@ def clean_data(configs):
                                     })
 
       cars_details_merge=rename_cols(cars_details_merge,combined_columns_to_rename)
-      logging.info("Succesfully Renamed Columns")
+      logger.info("Succesfully Renamed Columns")
    except Exception as e:
       raise e
 
@@ -79,13 +84,13 @@ def clean_data(configs):
        'Fuel Suppy System', 'Alloy Wheel Size','Listed_Price']
    try:
       cars_details_merge=rearange_cols(cars_details_merge,cols_to_rearrange)
-      logging.info("Successfully Rearranged Columns")
+      logger.info("Successfully Rearranged Columns")
    except Exception as e:
       raise e
 
    try:
       cars_details_merge=drop_duplicate_rows(cars_details_merge)
-      logging.info("Successfully Dropped Duplicate Rows")
+      logger.info("Successfully Dropped Duplicate Rows")
    except Exception as e:
       raise e
     #Cols to Lower
@@ -106,68 +111,68 @@ def clean_data(configs):
 
    try:
       cars_details_merge=cols_to_lower(cars_details_merge,columns_str_to_lower)
-      logging.info("Successfully Converted the Column Entries to lower case")
+      logger.info("Successfully Converted the Column Entries to lower case")
    except Exception as e:
       raise e    
    
    try:
       cars_details_merge=valve_config(cars_details_merge)
-      logging.info("Successfully Cleaned Valve Config Column")
+      logger.info("Successfully Cleaned Valve Config Column")
    except Exception as e:
       raise e
 
    try:
       cars_details_merge=turbocharger(cars_details_merge)
-      logging.info("Successfully Cleaned TurboCharger Column")
+      logger.info("Successfully Cleaned TurboCharger Column")
    except Exception as e:
       raise e
 
    try:
       cars_details_merge=gearbox(cars_details_merge)
-      logging.info("Successfully Cleaned Gear Box Column")
+      logger.info("Successfully Cleaned Gear Box Column")
    except Exception as e:
       raise e
 
    try:
       cars_details_merge=drivetype(cars_details_merge)
-      logging.info("Successfully Cleaned Drive Type Column")
+      logger.info("Successfully Cleaned Drive Type Column")
    except Exception as e:
       raise e
 
    try: 
       cars_details_merge=steeringtype(cars_details_merge)
-      logging.info("Successfully Cleaned Steering Type Column")
+      logger.info("Successfully Cleaned Steering Type Column")
    except Exception as e:
       raise e
 
    try:
       cars_details_merge=front_rear_brake(cars_details_merge)
-      logging.info("Successfully Cleaned Front and Rear Brake Columns")
+      logger.info("Successfully Cleaned Front and Rear Brake Columns")
    except Exception as e:
       raise e
 
    try:
       cars_details_merge=tyretype(cars_details_merge)
-      logging.info("Successfully Cleaned Tyre Type Column")
+      logger.info("Successfully Cleaned Tyre Type Column")
    except Exception as e:
       raise e
 
    try:
       cars_details_merge=fuelsupply(cars_details_merge)
-      logging.info("Successfully Cleaned, Fuel Supply Column")
+      logger.info("Successfully Cleaned, Fuel Supply Column")
    except Exception as e:
       raise e
    
    try:
       cars_details_merge=torque_and_power(cars_details_merge)
-      logging.info("Successfully Cleaned Torque and Power Columns")
+      logger.info("Successfully Cleaned Torque and Power Columns")
    except Exception as e:
       raise e
 
 
    try:
       cars_details_merge=turbo_and_supercharger(cars_details_merge)
-      logging.info("Successfully Converted TurboCharger and SuperCharger Columns to Boolena")
+      logger.info("Successfully Converted TurboCharger and SuperCharger Columns to Boolena")
    except Exception as e:
       raise e
 
@@ -177,7 +182,7 @@ def clean_data(configs):
                       ,'Alloy Wheel Size','KM_Driven','Cargo_Volume','mileage']
    try:
       cars_details_merge=numerical_feature(cars_details_merge,feature_to_numerical)
-      logging.info("Successfully Got The Numerical Data From the Features")
+      logger.info("Successfully Got The Numerical Data From the Features")
    except Exception as e:
       raise e
    return cars_details_merge,clean_data_loc
@@ -189,16 +194,17 @@ if __name__=="__main__":
    parsed_args=args.parse_args()
    configs=read_params(parsed_args.config_path)
    
-   logging.info(f"Data Cleaning Started")
+   logger.info(f"Data Cleaning Started")
    try:
       clean_data,clean_data_loc=clean_data(configs)
-      logging.info("Data Cleaning Successful")
+      logger.info("Data Cleaning Successful")
       try:
          save_df(clean_data,clean_data_loc)
-         logging.info(f"Cleaned Data Saved in location {clean_data_loc}")
+         logger.info(f"Cleaned Data Saved in location {clean_data_loc}")
       except Exception as e:
-         logging.error(f"Cleaned Data Could Not Be Saved in location {clean_data_loc}",exc_info=True)
+         logger.error(f"Cleaned Data Could Not Be Saved in location {clean_data_loc}",exc_info=True)
    except Exception as e:
-      logging.error(f"Data Cleaning Failed",exc_info=True)
+      logger.error(f"Data Cleaning Failed",exc_info=True)
+   db.close_connection()
 
    

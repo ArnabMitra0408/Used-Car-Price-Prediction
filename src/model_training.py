@@ -12,11 +12,17 @@ import mlflow
 import mlflow.sklearn
 from argparse import ArgumentParser
 from utils.code_files import common_utils
-import logging
+
 from datetime import datetime
 from utils.code_files.ml_utils.plot_residuals import plot_residuals
 from utils.code_files.ml_utils.plot_feature_importances import plot_feature_importances
-logger = logging.getLogger(__name__)
+from utils.code_files.common_utils import sql_connect,Custom_Handler
+import logging
+db = sql_connect()
+custom_handler = Custom_Handler(db)
+logger = logging.getLogger('Pipeline')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(custom_handler)
 
 
 
@@ -155,7 +161,7 @@ def best_model(model_data,configs):
                             'mse': mse,
                             'mae': mae
                         })
-                        logging.info(f"{model_name} Trained with R2 of {r2}, mse of {mse}, mae of {mae}")
+                        logger.info(f"{model_name} Trained with R2 of {r2}, mse of {mse}, mae of {mae}")
                         
                     except Exception as e:
                         raise e
@@ -178,9 +184,10 @@ if __name__=="__main__":
     configs=read_params(config_path)
 
 
-    logging.info("Beginning Model Training")
+    logger.info("Beginning Model Training")
     try:
         model_data=get_data(configs,"model_training")
         best_model_info,best_model_path=best_model(model_data,configs)
     except:
-        logging.error("Model Training Failed",exc_info=True)
+        logger.error("Model Training Failed",exc_info=True)
+    db.close_connection()
