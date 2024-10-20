@@ -1,6 +1,8 @@
-FROM python
+FROM python:3.12.7
 
-COPY requirements.txt .
+WORKDIR /used_car_project
+
+COPY requirements.txt /used_car_project
 
 RUN pip install -r requirements.txt
 

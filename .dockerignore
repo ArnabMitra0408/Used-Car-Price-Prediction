@@ -1,0 +1,4 @@
+artifacts/
+dvc.lock
+artifacts.dvc
+dvc.yaml

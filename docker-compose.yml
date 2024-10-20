@@ -1,11 +1,33 @@
-version:  "3.7"
-
 services:
-  mlapp:
-    container_name: used_car_price_predictor
-    image: arnab0408/used_car_price_predictor
+  db:
+    container_name: "mysqldb"
+    image: "mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+    ports:
+      - "3306:3306"
+    volumes:
+      - "mysql_volume:/var/lib/mysql"
+    networks:
+      - "car_price_db_net"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  car_app:
+    container_name: "car_price_app"
+    image: "car_app"
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "5000:5000"
-    build:
-      context: .
-      dockerfile: Dockerfile
+    networks:
+      - "car_price_db_net"
+
+volumes:
+  mysql_volume:
+
+networks:
+  car_price_db_net:

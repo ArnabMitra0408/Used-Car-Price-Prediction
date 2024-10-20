@@ -12,8 +12,8 @@ class sql_connect:
     def __init__(self):
         try:
             self.connection = mysql.connector.connect(
-                host='localhost',
-                database='carpricepipelinelogs',
+                host='mysqldb',
+                database='Car_Price',
                 user='root',
                 password='root'
             )
@@ -54,7 +54,25 @@ class Custom_Handler(logging.Handler):
         try:
             if record:
                 query = """
-                    INSERT INTO LOGS (LevelName, Message, DateCreated) 
+                    INSERT INTO Pipeline_LOGS (LevelName, Message, DateCreated) 
+                    VALUES (%s, %s, SYSDATE())
+                """
+                params = (record.levelname, record.msg)
+                self.db.execute_query(query, params)
+        except Exception as e:
+            print(f"Failed to log message to database: {e}")
+
+
+class App_Custom_Handler(logging.Handler):
+    def __init__(self, db):
+        super().__init__()
+        self.db = db
+
+    def emit(self, record):
+        try:
+            if record:
+                query = """
+                    INSERT INTO Application_LOGS (LevelName, Message, DateCreated) 
                     VALUES (%s, %s, SYSDATE())
                 """
                 params = (record.levelname, record.msg)
@@ -68,6 +86,12 @@ custom_handler = Custom_Handler(db)
 logger = logging.getLogger('Pipeline')
 logger.setLevel(logging.DEBUG)
 logger.addHandler(custom_handler)
+
+
+app_custom_handler = App_Custom_Handler(db)
+app_logger = logging.getLogger('app_logger')
+app_logger.setLevel(logging.DEBUG)
+app_logger.addHandler(custom_handler)
 
 
 def clean_dir(dir_path:str)-> None:

@@ -2,11 +2,22 @@ import joblib
 from src.utils.code_files.common_utils import read_params
 from flask import Flask, request, render_template
 import numpy as np
+import logging
+from src.utils.code_files.common_utils import sql_connect,App_Custom_Handler
+db = sql_connect()
+custom_handler = App_Custom_Handler(db)
+logger = logging.getLogger('app_logger')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(custom_handler)
 
 app = Flask(__name__)
-print("starting acquiring params")
-configs=read_params('params.yaml')
-print("params acquired")
+
+try:
+    configs=read_params('params.yaml')
+    logger.info("params.yaml file read successfully")
+except Exception as e:
+    logger.error("Could not load params.yaml",exc_info=True)
+
 def file_load(path:str,type:str='pkl'):
     file=joblib.load(path)
     return file
@@ -119,11 +130,20 @@ def predict():
 
         inputs.append(float(request.form["Max_Power_At"]))
 
-        para=np.array(inputs)
-        para=para.reshape(1,-1)
-        price=ml_model.predict(para)[0]
-    return render_template("index.html",car_price=price)
+        inputs=np.array(inputs)
+        logger.info(f"User Inputs: {inputs}")
+
+        inputs=inputs.reshape(1,-1)
+        try:
+            price=ml_model.predict(inputs)[0]
+            logger.info(f"Model Prediction: {price}")
+            return render_template("index.html",car_price=price)
+        except Exception as e:
+            logger.error("Car price could not be predicted",exc_info=True)
 
 if __name__ == "__main__":
-
-    app.run(debug=True)
+    try:
+        app.run(debug=True)
+        logger.info("Flask APP is running on port 5000")
+    except Exception as e:
+        logger.error("Flask APP Run Failed:",exc_info=True)
