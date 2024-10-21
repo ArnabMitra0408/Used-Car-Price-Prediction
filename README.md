@@ -36,9 +36,21 @@ Model versioning was managed with MLFlow. All created models were tracked and an
 Random Forest Regressor emerged as the best model with an R² score of 0.95
 
 
-## Productionization
+## Deployment and Productionization
 
-This step involved building a Flask API hosted on a local server. The end-user application accepts input variables such as Car Model Name, KM Driven, etc. Based on this data, the car price is predicted using the Random Forest model.
+### Dockerization
+* The model was deployed via a Flask API and containerized using Docker to ensure consistency across environments. This allows for seamless deployment and version control across different systems.
+* Docker ensures that the environment, libraries, and dependencies remain consistent, simplifying the process of deploying the model to different servers or cloud platforms.
+
+### Logging Pipeline
+* Integrated a logging pipeline using Python and MySQL Database.
+* The logs capture key events during model inference and API usage, providing insights into API requests, prediction outcomes, and potential errors.
+* This setup enhances system monitoring and performance tracking in production, making it easier to identify bottlenecks and improve user experience.
+
+### End-User Application
+* Built a Flask API hosted on a local server.
+* The end-user application accepts input variables such as Car Model Name, KM Driven, and other relevant features.
+* Based on this data, the car price is predicted using the Random Forest model.
 
 ## Set Up Project Locally
 
@@ -59,3 +71,12 @@ To set up the project locally, follow these steps:
 * Run the DVC pipeline:
   ```bash
    dvc repro
+* Build the docker image:
+  ```bash
+   docker build -t car-app .
+* Pull mysql image:
+  ```bash
+   docker pull mysql
+* Run Docker Compose:
+  ```bash
+  docker compose up
